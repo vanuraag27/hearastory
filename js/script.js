@@ -10,6 +10,7 @@ document.getElementById('storyForm').addEventListener('submit', function(event) 
     fetch(`/api/stories?type=${storyType}&language=${language}`)
         .then(response => response.json())
         .then(data => {
+            console.log("Fetched data:", data); 
             if (data.length > 0) {
                 const story = data[0]; // Display the first story for now
                 document.getElementById('storyContainer').innerHTML = `
