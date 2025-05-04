@@ -1,0 +1,52 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+h1 {
+  color: #4CAF50;
+}
+
+#story-list {
+  margin-bottom: 30px;
+}
+
+.story {
+  background-color: #f0f0f0;
+  padding: 10px;
+  margin: 10px;
+  border-radius: 5px;
+}
+
+button.control-btn {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+button.control-btn:hover {
+  background-color: #45a049;
+}
+
+button.play-btn {
+  background-color: #2196F3;
+}
+
+button.play-btn:hover {
+  background-color: #1e88e5;
+}
+
+input[type="range"].control-slider {
+  width: 200px;
+  margin-top: 10px;
+}
+
+#audio-controls {
+  margin-top: 30px;
+}
