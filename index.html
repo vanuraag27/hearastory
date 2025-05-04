@@ -153,18 +153,24 @@
       }
     }
 
-    async function translateText(text, targetLang, sourceLang = 'en') {
+   async function translateText(text, targetLang, sourceLang = 'en') {
   if (targetLang === sourceLang) return text;
 
   const res = await fetch("https://libretranslate.de/translate", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ q: text, source: sourceLang, target: targetLang, format: "text" })
+    body: JSON.stringify({
+      q: text,
+      source: sourceLang,
+      target: targetLang,
+      format: "text"
+    })
   });
 
   const data = await res.json();
   return data.translatedText;
 }
+
 
     async function getStory() {
       const type = document.getElementById("storyType").value;
@@ -198,13 +204,13 @@
   const titleEl = document.createElement("h3");
   titleEl.textContent = story.title;
 
-  // No translation if already in requested language
+  // Skip translation if story is already in target language
   let displayedText = story.content;
-  if (currentLang !== 'en') {
+  if (currentLang !== 'en' && story.language !== currentLang) {
     try {
-      displayedText = await translateText(story.content, currentLang, currentLang);
+      displayedText = await translateText(story.content, currentLang, story.language || 'en');
     } catch (err) {
-      console.warn("Translation failed:", err);
+      console.warn("Translation failed, using original:", err);
     }
   }
 
@@ -215,7 +221,7 @@
   container.appendChild(contentEl);
 
   speak(displayedText, currentLang, currentStyle);
-   }
+}
 
     function changeStory() {
       if (!storyList || storyList.length === 0) return;
