@@ -176,17 +176,17 @@
         const res = await fetch(`https://hear-a-story.onrender.com/api/stories?type=${type}&language=${currentLang}`);
         storyList = await res.json();
 
-        if (!Array.isArray(storyList) || storyList.length === 0) {
-          document.getElementById("storyContainer").innerHTML = "No stories found.";
-          return;
-        }
-
-        showStory(storyList[Math.floor(Math.random() * storyList.length)]);
-      } catch (error) {
-        console.error(error);
-        document.getElementById("storyContainer").innerHTML = "There was an error fetching the story.";
-      }
+       if (!Array.isArray(storyList) || storyList.length === 0) {
+      document.getElementById("storyContainer").innerHTML = "No stories found.";
+      return;
     }
+
+    showStory(storyList[Math.floor(Math.random() * storyList.length)]);
+  } catch (error) {
+    console.error(error);
+    document.getElementById("storyContainer").innerHTML = "There was an error fetching the story.";
+  }
+}
 
     async function showStory(story) {
       currentStory = story;
