@@ -153,16 +153,18 @@
       }
     }
 
-    async function translateText(text, targetLang) {
-      if (targetLang === 'en') return text;
-      const res = await fetch("https://libretranslate.de/translate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ q: text, source: "en", target: targetLang, format: "text" })
-      });
-      const data = await res.json();
-      return data.translatedText;
-    }
+    async function translateText(text, targetLang, sourceLang = 'en') {
+  if (targetLang === sourceLang) return text;
+
+  const res = await fetch("https://libretranslate.de/translate", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ q: text, source: sourceLang, target: targetLang, format: "text" })
+  });
+
+  const data = await res.json();
+  return data.translatedText;
+}
 
     async function getStory() {
       const type = document.getElementById("storyType").value;
@@ -189,24 +191,31 @@
 }
 
     async function showStory(story) {
-      currentStory = story;
-      const container = document.getElementById("storyContainer");
-      container.innerHTML = "";
+  currentStory = story;
+  const container = document.getElementById("storyContainer");
+  container.innerHTML = "";
 
-      const titleEl = document.createElement("h3");
-      titleEl.textContent = story.title;
+  const titleEl = document.createElement("h3");
+  titleEl.textContent = story.title;
 
-      const translated = (story.language && story.language !== 'en')
-       ? story.content
-       : await translateText(story.content, currentLang);
-      const contentEl = document.createElement("p");
-      contentEl.textContent = translated;
-
-      container.appendChild(titleEl);
-      container.appendChild(contentEl);
-
-      speak(translated, currentLang, currentStyle);
+  // No translation if already in requested language
+  let displayedText = story.content;
+  if (currentLang !== 'en') {
+    try {
+      displayedText = await translateText(story.content, currentLang, currentLang);
+    } catch (err) {
+      console.warn("Translation failed:", err);
     }
+  }
+
+  const contentEl = document.createElement("p");
+  contentEl.textContent = displayedText;
+
+  container.appendChild(titleEl);
+  container.appendChild(contentEl);
+
+  speak(displayedText, currentLang, currentStyle);
+   }
 
     function changeStory() {
       if (!storyList || storyList.length === 0) return;
