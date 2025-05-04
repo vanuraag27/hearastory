@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Story (Admin)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, textarea, select, button {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    #formContainer {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Add New Story</h1>
+
+  <div id="passwordPrompt">
+    <label for="adminPass">Enter Admin Password:</label>
+    <input type="password" id="adminPass" placeholder="Password" />
+    <button onclick="checkPassword()">Enter</button>
+    <p id="errorMsg" style="color: red;"></p>
+  </div>
+
+  <div id="formContainer">
+    <form id="storyForm">
+      <label for="type">Story Type:</label>
+      <select id="type" required>
+        <option value="adventure">Adventure</option>
+        <option value="funny">Funny</option>
+        <option value="mystery">Mystery</option>
+        <option value="fantasy">Fantasy</option>
+        <option value="horror">Horror</option>
+        <option value="motivational">Motivational</option>
+        <option value="moral">Moral</option>
+      </select>
+
+      <label for="language">Language (e.g., en, hi, es):</label>
+      <input type="text" id="language" required />
+
+      <label for="title">Title:</label>
+      <input type="text" id="title" required />
+
+      <label for="content">Story Content:</label>
+      <textarea id="content" rows="10" required></textarea>
+
+      <button type="submit">Submit Story</button>
+    </form>
+    <p id="responseMsg"></p>
+  </div>
+
+  <script>
+    const PASSWORD = "admin123"; // 🔒 Change this password to whatever you like
+
+    function checkPassword() {
+      const input = document.getElementById("adminPass").value;
+      const error = document.getElementById("errorMsg");
+      if (input === PASSWORD) {
+        document.getElementById("passwordPrompt").style.display = "none";
+        document.getElementById("formContainer").style.display = "block";
+      } else {
+        error.textContent = "Incorrect password.";
+      }
+    }
+
+    document.getElementById("storyForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      const type = document.getElementById("type").value;
+      const language = document.getElementById("language").value;
+      const title = document.getElementById("title").value;
+      const content = document.getElementById("content").value;
+
+      const storyData = { type, language, title, content };
+
+      try {
+        const response = await fetch("https://hear-a-story.onrender.com/api/stories", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(storyData),
+        });
+
+        const result = await response.json();
+        document.getElementById("responseMsg").textContent = result.message || "Story added successfully!";
+        document.getElementById("storyForm").reset();
+      } catch (err) {
+        document.getElementById("responseMsg").textContent = "Error adding story.";
+      }
+    });
+  </script>
+</body>
+</html>
