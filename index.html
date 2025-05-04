@@ -173,7 +173,7 @@
       currentStyle = voiceStyle;
 
       try {
-        const res = await fetch(`https://hear-a-story.onrender.com/api/stories?type=${type}&language=${currentLang}`);
+        const response = await fetch(`https://hear-a-story.onrender.com/api/stories?type=${storyType}&language=${language}`);
         storyList = await res.json();
 
         if (!Array.isArray(storyList) || storyList.length === 0) {
