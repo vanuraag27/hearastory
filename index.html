@@ -196,7 +196,9 @@
       const titleEl = document.createElement("h3");
       titleEl.textContent = story.title;
 
-      const translated = await translateText(story.content, currentLang);
+      const translated = (story.language && story.language !== 'en')
+       ? story.content
+       : await translateText(story.content, currentLang);
       const contentEl = document.createElement("p");
       contentEl.textContent = translated;
 
